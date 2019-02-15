@@ -79,18 +79,19 @@
 
 
 
-<meta name="description" content="Xcode 更新到版本10，每次模拟器中运行应用程序时，控制台都会显示以上内容。之前显示时，没搭理他们，现在看多了就觉得有点烦，还是查查资料给解决了吧">
+<meta name="description" content="Xcode 更新到版本10，每次模拟器中运行应用程序时，控制台都会显示以上内容。之前显示时，没搭理他们，现在看多了就觉得有点烦，还是查查资料解决下">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Unable to look up screen scale">
 <meta property="og:url" content="http://yoursite.com/2019/02/15/Article3/index.html">
 <meta property="og:site_name" content="GaryL&#39;s blog">
-<meta property="og:description" content="Xcode 更新到版本10，每次模拟器中运行应用程序时，控制台都会显示以上内容。之前显示时，没搭理他们，现在看多了就觉得有点烦，还是查查资料给解决了吧">
+<meta property="og:description" content="Xcode 更新到版本10，每次模拟器中运行应用程序时，控制台都会显示以上内容。之前显示时，没搭理他们，现在看多了就觉得有点烦，还是查查资料解决下">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2019/02/15/Article3/article1.png">
-<meta property="og:updated_time" content="2019-02-15T08:14:31.528Z">
+<meta property="og:image" content="http://yoursite.com/2019/02/15/Article3/article2.png">
+<meta property="og:updated_time" content="2019-02-15T08:42:25.671Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Unable to look up screen scale">
-<meta name="twitter:description" content="Xcode 更新到版本10，每次模拟器中运行应用程序时，控制台都会显示以上内容。之前显示时，没搭理他们，现在看多了就觉得有点烦，还是查查资料给解决了吧">
+<meta name="twitter:description" content="Xcode 更新到版本10，每次模拟器中运行应用程序时，控制台都会显示以上内容。之前显示时，没搭理他们，现在看多了就觉得有点烦，还是查查资料解决下">
 <meta name="twitter:image" content="http://yoursite.com/2019/02/15/Article3/article1.png">
 
 
@@ -288,7 +289,7 @@
 	    
   		<span class="post-updated">
    		 &nbsp; | &nbsp; 更新于
-    		 <time itemprop="dateUpdated" datetime="2019-02-15T16:14:31+08:00" content="2019-02-15">
+    		 <time itemprop="dateUpdated" datetime="2019-02-15T16:42:25+08:00" content="2019-02-15">
       		 2019-02-15
     		 </time>
   		</span>
@@ -356,7 +357,15 @@
       
 
       
-        <p><img src="/2019/02/15/Article3/article1.png" alt="图片"><br>Xcode 更新到版本10，每次模拟器中运行应用程序时，控制台都会显示以上内容。之前显示时，没搭理他们，现在看多了就觉得有点烦，还是查查资料给解决了吧<br><a id="more"></a></p>
+        <p><img src="/2019/02/15/Article3/article1.png" alt="图片"><br>Xcode 更新到版本10，每次模拟器中运行应用程序时，控制台都会显示以上内容。之前显示时，没搭理他们，现在看多了就觉得有点烦，还是查查资料解决下<a id="more"></a></p>
+<p>##解决方法：<br>Xcode10 点击 Product —&gt; Scheme —&gt; Edit Scheme —&gt; Run -&gt; Arguments，在 Environment Variables 里面添加 OS_ACTIVITY_MODE ＝ disable<br><img src="/2019/02/15/Article3/article2.png" alt="图片"></p>
+<blockquote>
+<ol>
+<li>OS_ACTIVITY_MODE 这个属性的作用是清除掉 NSLog 的打印信息，在真机调试时如果使用 NSLog 来打印信息，那么日志会全部被屏蔽掉</li>
+<li>如果在该模式下想要打印信息，那么需要使用 fprintf 方法，这种方式需要定义宏定义打印方法</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt; ifdef DEBUG</span><br><span class="line">define NSLog(format, ...) printf(&quot;\n[%s] %s [第%d行] %s\n&quot;, TIME, FUNCTION, LINE, [[NSString stringWithFormat:format, ## VA_ARGS] UTF8String]);</span><br><span class="line">else</span><br><span class="line">define NSLog(format, ...)</span><br><span class="line">endif</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
 
       
     </div>
